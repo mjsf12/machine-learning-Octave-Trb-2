@@ -21,6 +21,8 @@ A = [X X1 X.^0]; %% A
 E0 =0;
 out = 0;
 %% Loop da interação
+Xline = linspace(1,200,200);
+Yline = zeros(1,200);
 for i = 1:200
   Y_S=A*th;
   Y_S=1./((e.^(Y_S.*-1)).+1);
@@ -32,6 +34,9 @@ for i = 1:200
   NA = NA./length(Y);
   NA = NA*Apr;
   th = th - NA';
+  error =  Y - Y_S;
+  E = sum(error.^2)/length(X);
+  Yline(i)=E;
 endfor
 %ver no console
 O = [Y Y_S];
@@ -51,3 +56,4 @@ quant = conf(1,1)+conf(2,2);%%  pegando os que deram certo
 error = conf(1,2)+conf(2,1); %% os erros
 porc = (quant/(quant + error))*100 %% porcentagem
 rate = [porc quant]; %% montando o  array
+plot(Xline,Yline)
