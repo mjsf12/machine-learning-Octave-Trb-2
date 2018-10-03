@@ -10,7 +10,7 @@ X=X_m_s;
 %X = (X.­-m)./std(X);
 X1 = L(:,2);
 m=mean(X1);
-X_m = X.-m;
+X_m = X1.-m;
 X_m_s = X_m./std(X1);
 X1=X_m_s;
 %X1 = (X1.-­mean(X1))./std(X1)
@@ -21,7 +21,7 @@ A = [X X1 X.^0]; %% A
 E0 =0;
 out = 0;
 %% Loop da interação
-for i = 1:10000
+for i = 1:200
   Y_S=A*th;
   Y_S=1./((e.^(Y_S.*-1)).+1);
   Y_out = Y_S - Y;
@@ -38,15 +38,16 @@ O = [Y Y_S];
 th;
 e =  Y - Y_S;
 E = sum(e.^2)/length(X) ;
-X11=X1;%fix feio
-% Mostrar o Grafico 3d
-X1 = linspace(-2,2);
-Y1 = linspace(-4,2);
-[ XX, YY ] = meshgrid(X1,Y1);
-Z_plano = th(3) + th(2).*YY +th(1).*XX;
-%Z_plano=1./((e.^(Z_plano.*-1)).+1) ;
-figure;
-hold on;
-mesh(XX,YY,Z_plano);
-hold on;
-plot3(X,X11,Y,'o');
+conf = zeros(2)
+for x = 1:rows(O)
+   row=O(x,:); %%pegar linha
+  if(row(:,2) >= 0.5)
+    conf(row(:,1)+1,2) = conf(row(:,1)+1,2)+1;  %montando a matrix de confusão
+  else
+    conf(row(:,1)+1,1) = conf(row(:,1)+1,1)+1;  %montando a matrix de confusão
+  endif
+endfor
+quant = conf(1,1)+conf(2,2);%%  pegando os que deram certo
+error = conf(1,2)+conf(2,1); %% os erros
+porc = (quant/(quant + error))*100 %% porcentagem
+rate = [porc quant]; %% montando o  array

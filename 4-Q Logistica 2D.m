@@ -16,7 +16,7 @@ out = 0
 %% Loop da interação
 for i = 1:200
   Y_S=A*th;
-  Y_S=1./((e.^(Y_S.*-1)).+1) 
+  Y_S=1./((e.^(Y_S.*-1)).+1); 
   Y_out = Y_S - Y;
   C_som = sum(Y_out);
   A_som = sum(Y_out.*X);
@@ -26,15 +26,22 @@ for i = 1:200
   th = th - NA';
 endfor
 %ver no console
-th
 O = [Y Y_S];
+th;
 e =  Y - Y_S;
-saida = [Y Y_S];
-E = sum(e.^2)/length(X) 
-% Mostrar o Grafico 3d
-X11 = linspace(-2,2);
-y = th(2) +th(1).*X11;
-y_=1./((e.^(y.*-1)).+1)
-
-plot(X11,y,'r'); hold on;
-plot(X,Y,'o')
+E = sum(e.^2)/length(X) ;
+conf = zeros(2);
+for x = 1:rows(O)
+   row=O(x,:); %%pegar linha
+  if(row(:,2) >= 0.5)
+    conf(row(:,1)+1,2) = conf(row(:,1)+1,2)+1;  %montando a matrix de confusão
+  else
+    conf(row(:,1)+1,1) = conf(row(:,1)+1,1)+1;  %montando a matrix de confusão
+  endif
+endfor
+quant = conf(1,1)+conf(2,2);%%  pegando os que deram certo
+error = conf(1,2)+conf(2,1); %% os erros
+porc = (quant/(quant + error))*100; %% porcentagem
+rate = [porc quant]; %% montando o  array
+rate
+conf
