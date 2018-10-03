@@ -56,4 +56,6 @@ quant = conf(1,1)+conf(2,2);%%  pegando os que deram certo
 error = conf(1,2)+conf(2,1); %% os erros
 porc = (quant/(quant + error))*100 %% porcentagem
 rate = [porc quant]; %% montando o  array
+rate
+conf
 plot(Xline,Yline)
